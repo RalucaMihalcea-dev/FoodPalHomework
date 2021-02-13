@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FoodPal.Providers.DataAccess.Repository
+namespace FoodPal.Providers.DataAccess.Repository.CatalogueItems
 {
     public interface ICatalogueItemsRepository : IRepository<CatalogueItem>
     {

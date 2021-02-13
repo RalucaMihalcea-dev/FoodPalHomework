@@ -1,4 +1,5 @@
 ﻿using FoodPal.Providers.DataAccess.Repository;
+using FoodPal.Providers.DataAccess.Repository.CatalogueItems;
 using FoodPal.Providers.DomainModels;
 using System;
 using System.Threading.Tasks;

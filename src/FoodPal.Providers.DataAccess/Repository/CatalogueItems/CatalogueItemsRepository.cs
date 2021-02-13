@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FoodPal.Providers.DataAccess.Repository
+namespace FoodPal.Providers.DataAccess.Repository.CatalogueItems
 {
     public class CatalogueItemsRepository : Repository<CatalogueItem>, ICatalogueItemsRepository
     {
         public CatalogueItemsRepository(ProvidersContext context) : base(context)
         {
-
         }
 
         public async Task<IEnumerable<CatalogueItem>> GetAllWithProviderAsync(int providerId)
