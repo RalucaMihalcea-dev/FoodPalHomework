@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FoodPal.Providers.DataAccess.UnitOfWork;
+using FoodPal.Providers.DomainModels;
 using FoodPal.Providers.Dtos;
 using FoodPal.Providers.Services.Contracts;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FoodPal.Providers.Services
 {
-    class CatalogueItemService : ICatalogueItemService
+    internal class CatalogueItemService : ICatalogueItemService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -17,8 +18,8 @@ namespace FoodPal.Providers.Services
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
         }
+
         public async Task<int> Create(NewCatalogueItemDto catalogueItem)
         {
             var itemModel = _mapper.Map<NewCatalogueItemDto, DomainModels.CatalogueItem>(catalogueItem);
@@ -31,7 +32,6 @@ namespace FoodPal.Providers.Services
             await _unitOfWork.CommitAsync();
             return itemModel.Id;
         }
-
 
         public async Task Delete(int catalogueItemId)
         {
@@ -54,12 +54,11 @@ namespace FoodPal.Providers.Services
             var model = await _unitOfWork.CatalogueItemsRepository
                 .GetWithProviderByIdAsync(catalogueItemId);
 
-            return _mapper.Map<DomainModels.CatalogueItem, CatalogueItemDto>(model);
+            return _mapper.Map<CatalogueItem, CatalogueItemDto>(model);
         }
 
         public async Task<bool> CatalogueItemExists(string catalogueItemName, int providerId)
         {
-
             var itemFound = await _unitOfWork.CatalogueItemsRepository
             .SingleOrDefaultAsync(x =>
             x.Name.ToLower() == catalogueItemName.ToLower() && x.Catalogue.ProviderId == providerId);
@@ -67,10 +66,20 @@ namespace FoodPal.Providers.Services
             return itemFound != null;
         }
 
-
         public async Task Update(CatalogueItemDto catalogueItem)
         {
+            var entity = await _unitOfWork.CatalogueItemsRepository.SingleOrDefaultAsync(x => x.Id == catalogueItem.Id);
+
+            entity.Name = catalogueItem.Name;
+
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<int> GetProvidersIdForCatalogItemAsync(NewCatalogueItemDto catalogueItem)
+        {
+            var catalogue = (await _unitOfWork.CatalogueItemsRepository.GetWithCatalogueByIdAsync(catalogueItem.CatalogueId))?.Catalogue;
+
+            return catalogue?.Provider != null ? catalogue.Provider.Id : 0;
         }
     }
 }

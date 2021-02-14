@@ -12,6 +12,7 @@ namespace FoodPal.Providers.DataAccess.UnitOfWork
         private ProviderRepository _providerRepo;
         private CatalogueItemsRepository _catalogueItemsRepo;
         private Repository<Catalogue> _catalogueRepo;
+        private Repository<CatalogueItemCategory> _catalogueItemCategoryRepo;
 
         public UnitOfWork(ProvidersContext providersContext)
         {
@@ -26,6 +27,9 @@ namespace FoodPal.Providers.DataAccess.UnitOfWork
 
         public IRepository<Catalogue> CatalogueRepository =>
             _catalogueRepo ??= new Repository<Catalogue>(_providersContext);
+
+        public IRepository<CatalogueItemCategory> CatalogueItemCategoryRepository =>
+         _catalogueItemCategoryRepo ??= new Repository<CatalogueItemCategory>(_providersContext);
 
         public async Task<int> CommitAsync()
         {

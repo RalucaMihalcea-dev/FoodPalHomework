@@ -28,5 +28,12 @@ namespace FoodPal.Providers.DataAccess.Repository.CatalogueItems
                 .Include(ci => ci.Category)
                 .SingleOrDefaultAsync(x => x.Id == catalogueItemId);
         }
+
+        public async Task<CatalogueItem> GetWithCatalogueByIdAsync(int catalogueItemId)
+        {
+            return await _providersContext.CatalogueItems
+               .Include(ci => ci.Catalogue)
+               .SingleOrDefaultAsync(x => x.Id == catalogueItemId);
+        }
     }
 }
