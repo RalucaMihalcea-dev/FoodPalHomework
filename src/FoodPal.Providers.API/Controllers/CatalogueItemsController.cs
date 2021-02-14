@@ -81,6 +81,9 @@ namespace FoodPal.Providers.API.Controllers
             {
                 var catalogItem = (await _catalogueItemService.GetCatalogueItemsForProvider(providerId)).SingleOrDefault(x => x.Id == itemId);
 
+                if (catalogItem == null)
+                    return NotFound();
+
                 return Ok(catalogItem);
             }
             catch (Exception)
